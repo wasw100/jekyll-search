@@ -1,14 +1,24 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
+from git import Repo
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
+app.config.from_object('settings')
 
 
 @app.route('/')
 def index():
     return 'index'
+
+
+@app.route('/git-pull')
+def git_pull():
+    repo_path = app.config['LOCAL_REPO_PATH']
+    repo = Repo(repo_path)
+    origin = repo.remotes.origin
+    pull_result = origin.pull()
+    return jsonify(code=0, data=pull_result)
 
 
 @app.route('/create_index')
