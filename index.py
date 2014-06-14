@@ -31,7 +31,7 @@ class Ticker(object):
 
 def build_index():
 
-    lucene.initVM(vmargs=['-Djava.awt.headless=true'])
+    lucene.initVM()
 
     post_dir = current_app.config['LOCAL_REPO_PATH'] + '/_posts/'
     index_store_dir = current_app.config['INDEX_STORE_DIR']

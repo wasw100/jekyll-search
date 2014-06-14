@@ -3,6 +3,7 @@
 from flask import Flask, request, jsonify
 from git import Repo
 from index import build_index
+from search import query
 
 app = Flask(__name__)
 app.config.from_object('settings')
@@ -29,12 +30,15 @@ def create_index():
     return 'create index'
 
 
-@app.route('/query')
-def query():
+@app.route('/search')
+def search():
     q = request.args.get('q')
     if not q:
         return 'not query str'
-    return 'query'
+    result = query(q)
+    return jsonify(result)
+
+    # return 'query-%s' % q
 
 
 if __name__ == '__main__':
