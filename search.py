@@ -7,7 +7,10 @@ import sys, os, lucene
 from java.io import File
 from org.apache.lucene.analysis.standard import StandardAnalyzer
 from org.apache.lucene.index import DirectoryReader
+from org.apache.lucene.queryparser.classic import QueryParserBase
 from org.apache.lucene.queryparser.classic import QueryParser
+from org.apache.lucene.search  import BooleanClause
+from org.apache.lucene.queryparser.classic import MultiFieldQueryParser
 from org.apache.lucene.store import SimpleFSDirectory
 from org.apache.lucene.search import IndexSearcher
 from org.apache.lucene.util import Version
@@ -25,15 +28,15 @@ def query(q):
     print 'directory', directory
     searcher = IndexSearcher(DirectoryReader.open(directory))
     analyzer = StandardAnalyzer(Version.LUCENE_CURRENT)
-    query = QueryParser(Version.LUCENE_CURRENT, "contents",
-                            analyzer).parse(q)
+
+    parse = MultiFieldQueryParser(Version.LUCENE_CURRENT, ['name', 'title', 'content'], analyzer)
+    query = MultiFieldQueryParser.parse(parse, q)
     scoreDocs = searcher.search(query, 50).scoreDocs
     print "%s total matching documents." % len(scoreDocs)
 
     result = []
     for scoreDoc in scoreDocs:
         doc = searcher.doc(scoreDoc.doc)
-        print 'path:', doc.get("path"), 'name:', doc.get("name")
-        item = dict(path=doc.get('path'), title=doc.get('name'))
+        item = dict(date=doc.get('date'), name=doc.get('name'), title=doc.get('title'), summary=doc.get('summary'))
         result.append(item)
     return result

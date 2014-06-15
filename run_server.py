@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, request, jsonify
+import json, re
+
+from flask import Flask, request, jsonify, render_template
 from git import Repo
 from index import build_index
 from search import query
@@ -30,13 +32,15 @@ def create_index():
     return 'create index'
 
 
+FILENAME_PATTERN = re.compile(r'\d+-\d+-\d+-(.+)\.md')
+
 @app.route('/search')
 def search():
     q = request.args.get('q')
     if not q:
         return 'not query str'
-    result = query(q)
-    return jsonify(result)
+    items = query(q)
+    return render_template('search.html', items=items)
 
     # return 'query-%s' % q
 

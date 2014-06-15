@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}kiwi快速登陆{% endblock %}
+{% block body %}
+<h2>搜索结果</h2>
+<ul>
+{% for item in items %}
+<li>
+    <div>
+    <a href="http://www.codeif.com/topic/{{ item['name'] }}">{{ item['title'] }}</a>
+    </div>
+    <div>
+        {{ item['date'] }}
+    </div>
+    <div>
+        {{ item['summary'] }}[...]
+    </div>
+</li>
+{% endfor %}
+</ul>
+{% endblock %}
